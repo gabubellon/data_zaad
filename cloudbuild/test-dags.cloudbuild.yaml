@@ -4,9 +4,9 @@ steps:
     entrypoint: pip
     args: ["install", "-r", "requirements.txt"]
   
-  - name: python:3.9-slim
-    entrypoint: pip
-    args: ["install", "-r", "requirements-test.txt"]
+  # - name: python:3.9-slim
+  #   entrypoint: pip
+  #   args: ["install", "-r", "requirements-test.txt"]
 
   # run in python 3.9 which is latest version in Cloud Composer
   - name: python:3.9-slim
