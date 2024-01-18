@@ -10,5 +10,5 @@ steps:
 
   # run in python 3.9 which is latest version in Cloud Composer
   - name: python:3.9-slim
-    entrypoint: python3.8
+    entrypoint: python3.9
     args: ["-m", "pytest", "-s", "dags/"]
