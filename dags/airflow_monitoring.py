@@ -1,12 +1,12 @@
 """A liveness prober dag for monitoring composer.googleapis.com/environment/healthy."""
 from datetime import timedelta
 
-import pendulum
+import airflow
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 
 default_args = {
-    'start_date': pendulum.today('UTC'),
+    'start_date': airflow.utils.dates.days_ago(0),
     'retries': 1,
     'retry_delay': timedelta(minutes=5)
 }
