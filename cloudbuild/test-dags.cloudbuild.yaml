@@ -2,13 +2,13 @@ steps:
   # install dependencies
   - name: python:3.9-slim
     entrypoint: pip
-    args: ["install", "-r", "requirements.txt"]
+    args: ["install", "-r", "requirements.txt", "--user"]
   
   # - name: python:3.9-slim
   #   entrypoint: pip
-  #   args: ["install", "-r", "requirements-test.txt"]
+  #   args: ["install", "-r", "requirements-test.txt", "--user"]
 
   # run in python 3.9 which is latest version in Cloud Composer
   - name: python:3.9-slim
-    entrypoint: python
-    args: ["-m", "pytest", "-s", "test/"]
+    entrypoint: python3.9
+    args: ["-m", "pytest", "-s", "dags/"]
