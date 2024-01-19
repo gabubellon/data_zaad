@@ -1,0 +1,27 @@
+# Data ZAAD
+
+
+
+## Local Dev
+
+Follow this documentation to install  `composer-dev` [Run Local Airflow Environments](https://cloud.google.com/composer/docs/composer-2/run-local-airflow-environments)
+
+Create a local env comoser using:
+
+```bash
+composer-dev create dev-data-zaad \
+  --from-source-environment airflow \
+  --location us-central1 \
+  --project gb-data-zaad \
+  --port 8081 \
+  --dags-path ./dags
+```
+
+chmod -R ./composer
+
+
+
+AIRFLOW_VERSION=2.6.3
+PYTHON_VERSION="$(python --version | cut -d " " -f 2 | cut -d "." -f 1-2)"
+CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
+pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
