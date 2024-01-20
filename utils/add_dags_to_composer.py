@@ -1,8 +1,8 @@
 import argparse
 import glob
 import os
-from shutil import copytree, ignore_patterns
 import tempfile
+from shutil import copytree, ignore_patterns
 from typing import List, Tuple
 
 # Imports the Google Cloud client library
@@ -13,7 +13,7 @@ def _create_dags_list(dags_directory: str) -> Tuple[str, List[str]]:
     temp_dir = tempfile.mkdtemp()
 
     # ignore non-DAG Python files
-    files_to_ignore = ignore_patterns("__init__.py", "*_test.py")
+    files_to_ignore = ignore_patterns("*_test.py")
 
     # Copy everything but the ignored files to a temp directory
     copytree(dags_directory, f"{temp_dir}/", ignore=files_to_ignore, dirs_exist_ok=True)
