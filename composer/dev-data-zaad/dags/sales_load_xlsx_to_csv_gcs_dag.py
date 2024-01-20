@@ -28,7 +28,7 @@ default_args = {
     "start_date": airflow.utils.dates.days_ago(0),
     "retries": 1,
     "retry_delay": timedelta(minutes=5),
-    "owner": "DE Team",
+    "owner": "Sales Team",
 }
 
 sales_files = [
@@ -70,9 +70,9 @@ def transform_xlsx_to_csv(xlsx_file, csv_file):
 
 
 with DAG(
-    "load_sales_xlsx_to_csv_gcs_dag",
+    "sales_load_xlsx_to_csv_gcs_dag",
     default_args=default_args,
-    description="Load Sales Data to BQ",
+    description="Load Sales Files to GCS",
     schedule=timedelta(days=1),
     max_active_runs=2,
     catchup=False,
