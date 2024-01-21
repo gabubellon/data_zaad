@@ -30,7 +30,6 @@ default_args = {
     "owner": "Sales Team",
 }
 
-
 sales_queries = [
     {
         "table_name": "gb-data-zaad.sales.sales_by_month_year",
