@@ -10,6 +10,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.transfers.local_to_gcs import \
     LocalFilesystemToGCSOperator
+from lib import utils_lib
 
 doc_md_DAG = """
 ### Load Sales Excel Data to CVS on Google Cloud Storage
@@ -48,27 +49,6 @@ sales_files = [
 
 sales_folder = "./sales_data/"
 
-
-def create_folder(folder_name):
-    os.makedirs(name=folder_name, exist_ok=True)
-
-
-def delete_folder(folder_name):
-    shutil.rmtree(folder_name)
-
-
-def donwload_file(file_name, url):
-    saved_file = urlretrieve(url, file_name)
-    logging.info(saved_file)
-
-
-def transform_xlsx_to_csv(xlsx_file, csv_file):
-    data_frame = pd.read_excel(xlsx_file)
-    data_frame["csv_file"] = os.path.basename(csv_file)
-    data_frame.columns = [c.lower() for c in  data_frame.columns]
-    data_frame.to_csv(csv_file, index=False)
-
-
 with DAG(
     "sales_load_xlsx_to_csv_gcs_dag",
     default_args=default_args,
@@ -80,27 +60,10 @@ with DAG(
     doc_md=doc_md_DAG
 
 ) as dag:
-    create_sales_files_folder = PythonOperator(
-        task_id="create_sales_files_folder",
-        python_callable=create_folder,
-        op_kwargs={"folder_name": sales_folder},
-    )
-
-    create_sales_xlsx_folder = PythonOperator(
-        task_id="create_sales_xlsx_folder",
-        python_callable=create_folder,
-        op_kwargs={"folder_name": os.path.join(sales_folder, "xlsx")},
-    )
-
-    create_sales_csv_folder = PythonOperator(
-        task_id="create_sales_csv_folder",
-        python_callable=create_folder,
-        op_kwargs={"folder_name": os.path.join(sales_folder, "csv")},
-    )
-
+    
     delete_sales_files_folder = PythonOperator(
         task_id="delete_sales_files_folder",
-        python_callable=delete_folder,
+        python_callable=utils_lib.delete_folder,
         op_kwargs={"folder_name": sales_folder},
     )
 
@@ -122,7 +85,7 @@ with DAG(
 
         download_operator = PythonOperator(
             task_id=f"donwload_sales_xlsx_{file_id}",
-            python_callable=donwload_file,
+            python_callable=utils_lib.donwload_file,
             op_kwargs=download_params,
         )
 
@@ -130,12 +93,10 @@ with DAG(
 
         csv_operator = PythonOperator(
             task_id=f"transform_xlsx_to_csv_{file_id}",
-            python_callable=transform_xlsx_to_csv,
+            python_callable=utils_lib.transform_xlsx_to_csv,
             op_kwargs=csv_params,
         )
-
-        create_sales_files_folder >> [create_sales_xlsx_folder, create_sales_csv_folder]
-        [create_sales_xlsx_folder, create_sales_csv_folder] >> download_operator
+        
         download_operator >> csv_operator
         csv_operator >> upload_sales_csv_to_gcs
         upload_sales_csv_to_gcs >> delete_sales_files_folder
