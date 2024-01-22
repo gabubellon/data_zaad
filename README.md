@@ -55,4 +55,4 @@ pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}
 ### CI/CD
 
 As pastas `utils` e `cloudbuild` apresentam as configurações necessárias para realizar o deploy e configurar a estrutura de CI/CD no Google Cloud
-Para mais detalhes vejs [esse](https://medium.com/@amarachi.ogu/implementing-ci-cd-in-cloud-composer-using-cloud-build-and-github-part-2-a721e4ed53da) artigo
+Para mais detalhes veja [esse](https://medium.com/@amarachi.ogu/implementing-ci-cd-in-cloud-composer-using-cloud-build-and-github-part-2-a721e4ed53da) artigo
