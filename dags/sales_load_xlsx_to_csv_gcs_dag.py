@@ -1,18 +1,13 @@
-import logging
 import os
-import shutil
 from datetime import timedelta
-from urllib.request import urlretrieve
 
 import airflow
-import pandas as pd
-from airflow import DAG
-from airflow.operators.python import PythonOperator
+from airflow.decorators import dag, task
 from airflow.providers.google.cloud.transfers.local_to_gcs import \
     LocalFilesystemToGCSOperator
-from lib import utils_lib
+from libs import utils_lib
 
-doc_md_DAG = """
+DOC_MD_DAG = """
 ### Load Sales Excel Data to CVS on Google Cloud Storage
 
 DAG responsável pela carga das planilhas de vendas (xlsx) para o Google Cloud Storage em format CSV
@@ -49,23 +44,23 @@ sales_files = [
 
 sales_folder = "./sales_data/"
 
-with DAG(
-    "sales_load_xlsx_to_csv_gcs_dag",
+
+@dag(
+    dag_id="sales_load_xlsx_to_csv_gcs_dag",
     default_args=default_args,
     description="Load Sales Files to GCS",
     schedule=timedelta(days=1),
     max_active_runs=2,
     catchup=False,
     dagrun_timeout=timedelta(minutes=10),
-    doc_md=doc_md_DAG
+    doc_md=DOC_MD_DAG,
+)
+def sales_load_xlsx_to_csv_gcs():
+    """DAG function to  sales_load_xlsx_to_csv_gcs"""
 
-) as dag:
-    
-    delete_sales_files_folder = PythonOperator(
-        task_id="delete_sales_files_folder",
-        python_callable=utils_lib.delete_folder,
-        op_kwargs={"folder_name": sales_folder},
-    )
+    @task(task_id="delete_sales_files_folder")
+    def delete_sales_files_folder():
+        utils_lib.delete_folder(sales_folder)
 
     upload_sales_csv_to_gcs = LocalFilesystemToGCSOperator(
         task_id="upload_sales_csv_to_gcs",
@@ -75,28 +70,27 @@ with DAG(
         gcp_conn_id="google_cloud",
     )
 
+    download_tasks = []
     for file in sales_files:
         file_id = file.get("file_id")
         url = file.get("url").replace(" ", "%20")
         xlsx_file = os.path.join(sales_folder, "xlsx", f"{file_id}.xlsx")
         csv_file = os.path.join(sales_folder, "csv", f"{file_id}.csv")
 
-        download_params = {"file_name": xlsx_file, "url": url}
+        @task(task_id=f"donwload_sales_xlsx_{file_id}")
+        def donwload_sales_xlsx(xlsx_file, url):
+            utils_lib.donwload_file(xlsx_file, url)
 
-        download_operator = PythonOperator(
-            task_id=f"donwload_sales_xlsx_{file_id}",
-            python_callable=utils_lib.donwload_file,
-            op_kwargs=download_params,
+        @task(task_id=f"transform_xlsx_to_csv_{file_id}")
+        def transform_xlsx_to_csv(xlsx_file, csv_file):
+            utils_lib.transform_xlsx_to_csv(xlsx_file, csv_file)
+
+        download_tasks.append(
+            donwload_sales_xlsx(xlsx_file, url)
+            >> transform_xlsx_to_csv(xlsx_file, csv_file)
         )
 
-        csv_params = {"xlsx_file": xlsx_file, "csv_file": csv_file}
+    (download_tasks >> upload_sales_csv_to_gcs >> delete_sales_files_folder())
 
-        csv_operator = PythonOperator(
-            task_id=f"transform_xlsx_to_csv_{file_id}",
-            python_callable=utils_lib.transform_xlsx_to_csv,
-            op_kwargs=csv_params,
-        )
-        
-        download_operator >> csv_operator
-        csv_operator >> upload_sales_csv_to_gcs
-        upload_sales_csv_to_gcs >> delete_sales_files_folder
+
+sales_load_xlsx_to_csv_gcs()

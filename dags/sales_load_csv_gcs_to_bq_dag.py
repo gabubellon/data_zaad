@@ -1,13 +1,9 @@
 import logging
 import os
-import shutil
 from datetime import timedelta
-from urllib.request import urlretrieve
 
 import airflow
-import pandas as pd
 from airflow import DAG
-from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.operators.bigquery import \
     BigQueryInsertJobOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import \
@@ -15,7 +11,7 @@ from airflow.providers.google.cloud.transfers.gcs_to_bigquery import \
 from airflow.providers.google.cloud.transfers.gcs_to_gcs import \
     GCSToGCSOperator
 
-doc_md_DAG = """
+DOC_MD_DAG = """
 ### Load CSV data on GCS to BQ
 
 DAG responsável pela carga dos dados dem CSV salvo no GCS para o BigQuery
@@ -62,7 +58,7 @@ with DAG(
     max_active_runs=2,
     catchup=False,
     dagrun_timeout=timedelta(minutes=10),
-    doc_md=doc_md_DAG,
+    doc_md=DOC_MD_DAG,
 ) as dag:
     move_from_input_to_import = GCSToGCSOperator(
         task_id="move_from_input_to_import",

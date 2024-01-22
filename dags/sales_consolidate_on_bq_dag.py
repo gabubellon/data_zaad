@@ -1,17 +1,13 @@
-import logging
-import os
-import shutil
+"""A DAG to consolidade sales data"""
+
 from datetime import timedelta
-from urllib.request import urlretrieve
 
 import airflow
-import pandas as pd
 from airflow import DAG
-from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.operators.bigquery import \
     BigQueryInsertJobOperator
 
-doc_md_DAG = """
+DOC_MD_DAG = """
 ### Consolidate Sales data on BQ
 
 DAG responsável pela consolidação dos dados de vendas tendo como fonte a tabela `sales_raw_data`
@@ -104,7 +100,7 @@ with DAG(
     max_active_runs=2,
     catchup=False,
     dagrun_timeout=timedelta(minutes=10),
-    doc_md=doc_md_DAG,
+    doc_md=DOC_MD_DAG,
 ) as dag:
     for query in sales_queries:
         table_name = query.get("table_name")
