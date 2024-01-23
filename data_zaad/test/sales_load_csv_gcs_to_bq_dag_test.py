@@ -1,5 +1,6 @@
 import internal_unit_testing
-from dags import sales_load_csv_gcs_to_bq_dag
+
+from data_zaad.dags import  sales_load_csv_gcs_to_bq_dag
 
 
 def test_dag_import():

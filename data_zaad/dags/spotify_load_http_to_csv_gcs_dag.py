@@ -5,8 +5,9 @@ from airflow.decorators import dag, task
 from airflow.models import Variable
 from airflow.providers.google.cloud.transfers.local_to_gcs import \
     LocalFilesystemToGCSOperator
-from libs import utils_lib
-from libs.spotify_api_lib import Spotify_API
+
+from data_zaad.libs import utils_lib
+from data_zaad.libs.spotify_api_lib import Spotify_API
 
 DOC_MD_DAG = """
 ### Load Spotify Data to GCS

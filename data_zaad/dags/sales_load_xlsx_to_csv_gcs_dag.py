@@ -5,7 +5,8 @@ import airflow
 from airflow.decorators import dag, task
 from airflow.providers.google.cloud.transfers.local_to_gcs import \
     LocalFilesystemToGCSOperator
-from libs import utils_lib
+
+from data_zaad.libs import utils_lib
 
 DOC_MD_DAG = """
 ### Load Sales Excel Data to CVS on Google Cloud Storage

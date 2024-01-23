@@ -1,6 +1,6 @@
 import internal_unit_testing
 
-from dags import airflow_monitoring
+from data_zaad.dags import airflow_monitoring
 
 
 def test_dag_import():
