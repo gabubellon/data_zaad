@@ -56,3 +56,20 @@ pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}
 
 As pastas `utils` e `cloudbuild` apresentam as configurações necessárias para realizar o deploy e configurar a estrutura de CI/CD no Google Cloud
 Para mais detalhes veja [esse](https://medium.com/@amarachi.ogu/implementing-ci-cd-in-cloud-composer-using-cloud-build-and-github-part-2-a721e4ed53da) artigo
+
+### Soluções Utilizadas
+
+**Google Cloud Storage**
+
+![CleanShot 2024-01-22 at 23 14 33@2x](https://github.com/gabubellon/data_zaad/assets/7385097/f6fb1e76-c3df-4ebc-a051-566a16867f8c)
+
+**Google Cloud Big Query**
+
+![CleanShot 2024-01-22 at 23 16 42](https://github.com/gabubellon/data_zaad/assets/7385097/2cfb7cfc-bae0-4fb3-87e0-80ac3d8aad41)
+
+**Google Cloud Composer Airflow**
+
+![CleanShot 2024-01-22 at 23 20 53](https://github.com/gabubellon/data_zaad/assets/7385097/b37ac35a-496a-4539-a68f-960da9d4ae04)
+
+
+
