@@ -71,5 +71,30 @@ Para mais detalhes veja [esse](https://medium.com/@amarachi.ogu/implementing-ci-
 
 ![CleanShot 2024-01-22 at 23 20 53](https://github.com/gabubellon/data_zaad/assets/7385097/b37ac35a-496a-4539-a68f-960da9d4ae04)
 
+### Tests
 
+Para executar os tests das DAGs use o comando
 
+```bash
+  cd ./data_zaad;python -m pytest -v -p no:warnings;cd ..
+```
+
+## Makefile
+
+Alguns atalhos utéis
+
+```bash
+# Executa um comando `composer-dev start` que inicia seu composer\airflow
+make start
+
+# Executa um comando `composer-dev stop` que para seu composer\airflow
+make stop
+# Executa um comando `composer-dev restart` que recria seu composer\airflow
+make recreate:
+
+# Executa os comando stop e start
+make restart
+
+# Executa os testes
+make test
+```

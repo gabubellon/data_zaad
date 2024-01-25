@@ -99,7 +99,8 @@ class Spotify_API:
             dh_ep = episodes_return.get("items")
 
             for item in dh_ep:
-                return_list.append({col: item.get(col) for col in return_columns})
+                if item:
+                    return_list.append({col: item.get(col) for col in return_columns})
 
             if not episodes_return["next"]:
                 break
