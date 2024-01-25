@@ -9,5 +9,8 @@ recreate:
 
 restart:stop start
 
+list:
+	composer-dev list
+
 test:
 	cd ./data_zaad;python -m pytest -v -p no:warnings;cd ..
