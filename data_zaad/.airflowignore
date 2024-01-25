@@ -1,2 +1,2 @@
-data_zaad/libs/.*
-data_zaad/test/.*
+libs/.*
+test/.*
